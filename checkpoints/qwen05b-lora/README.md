@@ -1,202 +1,74 @@
 ---
 base_model: Qwen/Qwen2.5-0.5B
 library_name: peft
+pipeline_tag: text-generation
+tags:
+  - lora
+  - world-model
+  - gridworld
 ---
 
-# Model Card for Model ID
+# qwen05b-lora — toy text world model adapter
 
-<!-- Provide a quick summary of what the model is/does. -->
+A LoRA adapter that turns `Qwen/Qwen2.5-0.5B` into a next-state predictor for
+a deterministic 5×5 gridworld (agent, key, locked door, 0–2 walls). Input is
+a state string plus an action; output is the exact next state string. The
+full project — environment, data generator, training and eval code, and every
+measured number — lives one directory up in this repository.
 
+## How to load
 
+```python
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from peft import PeftModel
 
-## Model Details
+base = AutoModelForCausalLM.from_pretrained("Qwen/Qwen2.5-0.5B")
+model = PeftModel.from_pretrained(base, "checkpoints/qwen05b-lora")
+tok = AutoTokenizer.from_pretrained("checkpoints/qwen05b-lora")
 
-### Model Description
+prompt = ("STATE: agent=(2,3); key=(0,1); door=(4,4) locked; has_key=false; "
+          "walls=[(1,1),(3,2)]\nACTION: move south\nNEXT: ")
+out = model.generate(**tok(prompt, return_tensors="pt"),
+                     max_new_tokens=80, do_sample=False)
+print(tok.decode(out[0][tok(prompt, return_tensors="pt").input_ids.shape[1]:],
+                 skip_special_tokens=True))
+# -> agent=(2,2); key=(0,1); door=(4,4) locked; has_key=false; walls=[(1,1),(3,2)]
+```
 
-<!-- Provide a longer summary of what this model is. -->
+Use greedy decoding (`do_sample=False`); the world is deterministic.
 
+## Adapter details
 
+- LoRA r=16, alpha per `adapter_config.json`, on q/k/v/o projections of all
+  24 attention layers: 192 tensors, 2,162,688 trainable parameters (0.44% of
+  the 494M-weight base). Adapter file: 8.7 MB.
+- The `checkpoint-547/1094/1641` subfolders (per-epoch save points with
+  optimizer state) are not committed — only the final adapter is.
 
-- **Developed by:** [More Information Needed]
-- **Funded by [optional]:** [More Information Needed]
-- **Shared by [optional]:** [More Information Needed]
-- **Model type:** [More Information Needed]
-- **Language(s) (NLP):** [More Information Needed]
-- **License:** [More Information Needed]
-- **Finetuned from model [optional]:** [More Information Needed]
+## Training
 
-### Model Sources [optional]
-
-<!-- Provide the basic links for the model. -->
-
-- **Repository:** [More Information Needed]
-- **Paper [optional]:** [More Information Needed]
-- **Demo [optional]:** [More Information Needed]
-
-## Uses
-
-<!-- Address questions around how the model is intended to be used, including the foreseeable users of the model and those affected by the model. -->
-
-### Direct Use
-
-<!-- This section is for the model use without fine-tuning or plugging into a larger ecosystem/app. -->
-
-[More Information Needed]
-
-### Downstream Use [optional]
-
-<!-- This section is for the model use when fine-tuned for a task, or when plugged into a larger ecosystem/app -->
-
-[More Information Needed]
-
-### Out-of-Scope Use
-
-<!-- This section addresses misuse, malicious use, and uses that the model will not work well for. -->
-
-[More Information Needed]
-
-## Bias, Risks, and Limitations
-
-<!-- This section is meant to convey both technical and sociotechnical limitations. -->
-
-[More Information Needed]
-
-### Recommendations
-
-<!-- This section is meant to convey recommendations with respect to the bias, risk, and technical limitations. -->
-
-Users (both direct and downstream) should be made aware of the risks, biases and limitations of the model. More information needed for further recommendations.
-
-## How to Get Started with the Model
-
-Use the code below to get started with the model.
-
-[More Information Needed]
-
-## Training Details
-
-### Training Data
-
-<!-- This should link to a Dataset Card, perhaps with a short stub of information on what the training data is all about as well as documentation related to data pre-processing or additional filtering. -->
-
-[More Information Needed]
-
-### Training Procedure
-
-<!-- This relates heavily to the Technical Specifications. Content here should link to that section when it is relevant to the training procedure. -->
-
-#### Preprocessing [optional]
-
-[More Information Needed]
-
-
-#### Training Hyperparameters
-
-- **Training regime:** [More Information Needed] <!--fp32, fp16 mixed precision, bf16 mixed precision, bf16 non-mixed precision, fp16 non-mixed precision, fp8 mixed precision -->
-
-#### Speeds, Sizes, Times [optional]
-
-<!-- This section provides information about throughput, start/end time, checkpoint size if relevant, etc. -->
-
-[More Information Needed]
+Supervised fine-tuning on 35,000 (state, action → next state) transitions
+from `../../data/train.jsonl` (seed 42, split by episode). lr 2e-4, 3 epochs,
+batch 64, loss masked to the completion (prompt labels −100). ~10 minutes on
+a rented RTX 4090; final train loss ≈ 0.003. Recipe: `../../train.py`.
 
 ## Evaluation
 
-<!-- This section describes the evaluation protocols and provides the results. -->
+On 3,000 held-out transitions from never-seen episodes, graded by exact
+string match: **99.63%** single-step; **148/150** episodes exact through
+10-step rollouts feeding the model its own predictions back. Trivial
+"predict no change" baseline: 42.6%. Full tables: `../../METRICS.md`.
 
-### Testing Data, Factors & Metrics
+## Limitations
 
-#### Testing Data
+- All 13 known mispredictions are one failure mode: on a move blocked by a
+  wall, the model sometimes moves the agent anyway (90.18% on that rule,
+  100% on the other seven). Raw misses: `../../autopsy_misses.jsonl`.
+- The adapter only knows this gridworld's canonical state format; it is not
+  a general model and inherits Qwen2.5-0.5B's license and behaviors for
+  anything outside it.
 
-<!-- This should link to a Dataset Card if possible. -->
-
-[More Information Needed]
-
-#### Factors
-
-<!-- These are the things the evaluation is disaggregating by, e.g., subpopulations or domains. -->
-
-[More Information Needed]
-
-#### Metrics
-
-<!-- These are the evaluation metrics being used, ideally with a description of why. -->
-
-[More Information Needed]
-
-### Results
-
-[More Information Needed]
-
-#### Summary
-
-
-
-## Model Examination [optional]
-
-<!-- Relevant interpretability work for the model goes here -->
-
-[More Information Needed]
-
-## Environmental Impact
-
-<!-- Total emissions (in grams of CO2eq) and additional considerations, such as electricity usage, go here. Edit the suggested text below accordingly -->
-
-Carbon emissions can be estimated using the [Machine Learning Impact calculator](https://mlco2.github.io/impact#compute) presented in [Lacoste et al. (2019)](https://arxiv.org/abs/1910.09700).
-
-- **Hardware Type:** [More Information Needed]
-- **Hours used:** [More Information Needed]
-- **Cloud Provider:** [More Information Needed]
-- **Compute Region:** [More Information Needed]
-- **Carbon Emitted:** [More Information Needed]
-
-## Technical Specifications [optional]
-
-### Model Architecture and Objective
-
-[More Information Needed]
-
-### Compute Infrastructure
-
-[More Information Needed]
-
-#### Hardware
-
-[More Information Needed]
-
-#### Software
-
-[More Information Needed]
-
-## Citation [optional]
-
-<!-- If there is a paper or blog post introducing the model, the APA and Bibtex information for that should go in this section. -->
-
-**BibTeX:**
-
-[More Information Needed]
-
-**APA:**
-
-[More Information Needed]
-
-## Glossary [optional]
-
-<!-- If relevant, include terms and calculations in this section that can help readers understand the model or model card. -->
-
-[More Information Needed]
-
-## More Information [optional]
-
-[More Information Needed]
-
-## Model Card Authors [optional]
-
-[More Information Needed]
-
-## Model Card Contact
-
-[More Information Needed]
 ### Framework versions
 
-- PEFT 0.14.0
+- PEFT 0.14.0 · transformers 4.46.3 · accelerate 1.2.1 (pinned in
+  `../../requirements.txt`)

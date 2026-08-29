@@ -7,6 +7,7 @@ podenv/.pod_state.json
 # --- python noise ---
 __pycache__/
 *.pyc
+.venv/
 
 # --- personal learning reports (not part of the evidence chain) ---
 report/

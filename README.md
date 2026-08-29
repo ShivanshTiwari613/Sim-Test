@@ -37,6 +37,16 @@ The correlation: wall-blocks are the *rarest* blocking cause in training
 The model's only weakness is exactly its least-taught, hardest-to-infer rule.
 Details: `autopsy_report.txt`, `autopsy_misses.jsonl`, `logs/autopsy.log`.
 
+**Per-rule breakdown** (`breakdown.py` → `breakdown.md`, `breakdown.png`):
+slicing all 3,000 test transitions by the rule they exercise puts every one
+of the 11 single-step misses in a single row — `move: blocked by wall`,
+90.18%; every other rule is at 100%. It is *not* simply the rarest rule
+(`unlock: succeeds` has fewer training examples and is perfect); it's where
+rarity meets the hardest inference — the only rule requiring coordinate
+arithmetic against a variable list with no textual cue. One showcase
+transition per rule, plus one raw miss with the model's actual wrong output,
+lives in `examples/exhibits.jsonl`.
+
 ## The environment
 
 Deterministic 5×5 grid (`env.py`): agent, key, locked door, 0–2 walls.
@@ -63,6 +73,8 @@ python env.py         # demo the gridworld + serializer (stdlib only)
 python gen_data.py    # -> data/train.jsonl (35k) + data/test.jsonl (3k)
 python train.py       # LoRA SFT; --smoke for a 200-example sanity run
 python eval.py        # single-step + rollout drift -> eval_drift.png
+python breakdown.py   # per-rule accuracy table + chart + exhibits
+                      # (no model call — joins data/ with autopsy_misses.jsonl)
 ```
 
 **Data** (`gen_data.py`): 1,750 train / 150 test episodes of 20 steps, split
@@ -136,6 +148,9 @@ env.py            gridworld + canonical serializer (stdlib)
 gen_data.py       rollouts -> data/train.jsonl, data/test.jsonl
 train.py          LoRA SFT (CUDA / MPS / CPU)
 eval.py           single-step + rollout drift -> eval_drift.png
+breakdown.py      per-rule table (breakdown.md) + chart (breakdown.png)
+                  + examples/exhibits.jsonl, from committed files only
+examples/         one showcase transition per rule + one raw miss
 podenv/           independent RunPod lifecycle (pod.py, bootstrap.sh)
 docs/             study notes: env → data → tokens → LoRA → eval, from zero
 data/             35k train / 3k test transitions (episode-split)
@@ -170,6 +185,10 @@ repo alone. Exact provenance of the published run:
 - `autopsy_report.txt`, `autopsy_misses.jsonl`, `logs/autopsy.log` — the full
   miss list behind the 99.63% autopsy: all 13 misses, raw, including the
   repeated ones. Nothing was filtered.
+- `breakdown.md` / `breakdown.png` / `examples/exhibits.jsonl` — the per-rule
+  accuracy table, the exposure-vs-accuracy chart, and one traceable example
+  per rule. Verify: `python breakdown.py` regenerates all three
+  deterministically from `data/*.jsonl` + `autopsy_misses.jsonl` alone.
 - `env.py` / `gen_data.py` / `train.py` / `eval.py` / `autopsy.py` — the entire
   pipeline; there is no step that isn't in the repo.
 

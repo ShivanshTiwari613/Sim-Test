@@ -1,0 +1,128 @@
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = (unset),
+	LANG = "en_IN.UTF-8"
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+debconf: delaying package configuration, since apt-utils is not installed
+autopsy.py
+           7685 100%    3.43MB/s   00:00:00 (xfer#1, to-check=0/6)
+env.py
+           3021 100%    7.29MB/s   00:00:00 (xfer#2, to-check=1/6)
+eval.py
+           5281 100%   14.22MB/s   00:00:00 (xfer#3, to-check=2/6)
+gen_data.py
+           3405 100%    6.72MB/s   00:00:00 (xfer#4, to-check=3/6)
+requirements.txt
+             58 100%  283.16KB/s   00:00:00 (xfer#5, to-check=4/6)
+train.py
+           4307 100%    9.85MB/s   00:00:00 (xfer#6, to-check=5/6)
+data/
+data/test.jsonl
+         675795 100%   51.69MB/s   00:00:00 (xfer#1, to-check=1/3)
+data/train.jsonl
+        7848668 100%  102.43MB/s   00:00:00 (xfer#2, to-check=2/3)
+bootstrap.sh
+           1463 100%    2.56MB/s   00:00:00 (xfer#1, to-check=0/1)
+checkpoints/
+checkpoints/qwen05b-lora/
+checkpoints/qwen05b-lora/README.md
+           5091 100%   11.90MB/s   00:00:00 (xfer#1, to-check=2/5)
+checkpoints/qwen05b-lora/adapter_config.json
+            742 100%    2.74MB/s   00:00:00 (xfer#2, to-check=3/5)
+checkpoints/qwen05b-lora/adapter_model.safetensors
+        2359296  27%    1.97MB/s   00:00:03        2555904  29%  252.55KB/s   00:00:23        3407872  39%    1.10MB/s   00:00:04        4128768  48%  852.91KB/s   00:00:05        5668864  65%    2.09MB/s   00:00:01        7143424  82%    1.78MB/s   00:00:00        7569408  87%  420.62KB/s   00:00:02        8388608  97%    1.15MB/s   00:00:00        8676008 100%    1.24MB/s   00:00:06 (xfer#3, to-check=4/5)
+GPU preflight ok (cuInit 0)
+creating venv at /workspace/venv (system-site-packages for CUDA torch)
+
+[notice] A new release of pip is available: 24.0 -> 26.2.1
+[notice] To update, run: pip install --upgrade pip
+bootstrap ok: torch 2.4.1+cu124, cuda=True (NVIDIA GeForce RTX 4090)
+transformers 4.46.3, peft 0.14.0
+[    0.1s] loading base model Qwen/Qwen2.5-0.5B on cuda...
+[   30.6s] model + adapter loaded.
+[   30.6s] test set: 3000 transitions, 150 episodes
+[   30.6s] === PHASE 1: single-step, all 3,000 transitions ===
+[   42.5s]   progress 320/3000  acc so far 320/320 = 100.00%
+[   44.8s]   MISS #1 ep1769 step0 action='move south' fields=['agent'] (phantom change (was a no-op, model changed something))
+[   44.8s]   MISS #2 ep1769 step1 action='move south' fields=['agent'] (phantom change (was a no-op, model changed something))
+[   44.8s]   MISS #3 ep1769 step2 action='move south' fields=['agent'] (phantom change (was a no-op, model changed something))
+[   46.0s]   MISS #4 ep1769 step5 action='move south' fields=['agent'] (phantom change (was a no-op, model changed something))
+[   46.0s]   MISS #5 ep1769 step6 action='move south' fields=['agent'] (phantom change (was a no-op, model changed something))
+[   46.0s]   MISS #6 ep1769 step7 action='move south' fields=['agent'] (phantom change (was a no-op, model changed something))
+[   46.0s]   MISS #7 ep1769 step8 action='move south' fields=['agent'] (phantom change (was a no-op, model changed something))
+[   46.0s]   MISS #8 ep1769 step9 action='move south' fields=['agent'] (phantom change (was a no-op, model changed something))
+[   46.0s]   MISS #9 ep1769 step11 action='move south' fields=['agent'] (phantom change (was a no-op, model changed something))
+[   49.5s]   MISS #10 ep1774 step6 action='move east' fields=['agent'] (phantom change (was a no-op, model changed something))
+[   54.2s]   progress 640/3000  acc so far 630/640 = 98.44%
+[   65.2s]   progress 960/3000  acc so far 950/960 = 98.96%
+[   76.4s]   progress 1280/3000  acc so far 1270/1280 = 99.22%
+[   87.7s]   progress 1600/3000  acc so far 1590/1600 = 99.38%
+[   98.9s]   MISS #11 ep1845 step10 action='move west' fields=['agent'] (phantom change (was a no-op, model changed something))
+[   98.9s]   progress 1920/3000  acc so far 1909/1920 = 99.43%
+[  109.5s]   progress 2240/3000  acc so far 2229/2240 = 99.51%
+[  120.4s]   progress 2560/3000  acc so far 2549/2560 = 99.57%
+[  132.1s]   progress 2880/3000  acc so far 2869/2880 = 99.62%
+[  136.7s]   progress 3000/3000  acc so far 2989/3000 = 99.63%
+[  136.7s] phase 1 done: 2989/3000 = 99.63% exact  (11 misses)
+[  136.7s] === PHASE 2: 10-step rollouts, all 150 episodes ===
+[  137.9s]   DIVERGED ep1769 at step 1 action='move south' fields=['agent'] (phantom change (was a no-op, model changed something))
+[  145.0s]   DIVERGED ep1774 at step 7 action='move east' fields=['agent'] (phantom change (was a no-op, model changed something))
+[  148.6s]   progress 32/150 episodes  (clean so far: 30)
+[  160.6s]   progress 64/150 episodes  (clean so far: 62)
+[  172.8s]   progress 96/150 episodes  (clean so far: 94)
+[  184.8s]   progress 128/150 episodes  (clean so far: 126)
+[  196.6s]   progress 150/150 episodes  (clean so far: 148)
+[  196.6s] phase 2 done: 148/150 episodes exact through all 10 steps
+[  196.6s] AUTOPSY REPORT  (2026-08-29 09:15)
+[  196.6s] single-step: 2989/3000 = 99.63% (11 misses)
+[  196.6s] rollout: 148/150 episodes clean through 10 steps
+[  196.6s] -
+[  196.6s] misses by action:
+[  196.6s]   move south   10
+[  196.6s]   move east    2
+[  196.6s]   move west    1
+[  196.6s] misses by wrong field(s):
+[  196.6s]   agent                13
+[  196.6s] misses by kind:
+[  196.6s]   phantom change (was a no-op, model changed something)   13
+[  196.6s] -
+[  196.6s] first 5 misses in full:
+[  196.6s]   [single] ep1769 action='move south'
+[  196.6s]     state: agent=(0,4); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+[  196.6s]     truth: agent=(0,4); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+[  196.6s]     pred : agent=(0,3); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+[  196.6s]   [single] ep1769 action='move south'
+[  196.6s]     state: agent=(0,4); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+[  196.6s]     truth: agent=(0,4); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+[  196.6s]     pred : agent=(0,3); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+[  196.6s]   [single] ep1769 action='move south'
+[  196.6s]     state: agent=(0,4); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+[  196.6s]     truth: agent=(0,4); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+[  196.6s]     pred : agent=(0,3); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+[  196.6s]   [single] ep1769 action='move south'
+[  196.6s]     state: agent=(0,4); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+[  196.6s]     truth: agent=(0,4); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+[  196.6s]     pred : agent=(0,3); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+[  196.6s]   [single] ep1769 action='move south'
+[  196.6s]     state: agent=(0,4); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+[  196.6s]     truth: agent=(0,4); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+[  196.6s]     pred : agent=(0,3); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+[  196.6s] wrote autopsy_misses.jsonl and autopsy_report.txt
+rsync: [sender] link_stat "/workspace/sim-test/eval_drift.png" failed: No such file or directory (2)
+rsync(36013): warning: receiver has empty file list: exiting
+autopsy_misses.jsonl
+           5654 100%   11.68MB/s   00:00:00 (xfer#1, to-check=0/1)
+autopsy_report.txt
+           1878 100%    5.28MB/s   00:00:00 (xfer#1, to-check=0/1)
+warning: some artifacts failed to pull (may not exist yet)
+pod: ni9nsv7xzqllon (existing)
+pod ni9nsv7xzqllon already running
+waiting for SSH on pod ni9nsv7xzqllon (up to 600s)...
+ssh is up: root@142.127.93.36:10674
+pushed project to /workspace/sim-test
+bootstrapping pod environment (venv on /workspace, deps)...
+running on pod: python autopsy.py
+
+stopping pod...

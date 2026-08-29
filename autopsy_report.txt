@@ -1,0 +1,34 @@
+AUTOPSY REPORT  (2026-08-29 09:15)
+single-step: 2989/3000 = 99.63% (11 misses)
+rollout: 148/150 episodes clean through 10 steps
+
+misses by action:
+  move south   10
+  move east    2
+  move west    1
+misses by wrong field(s):
+  agent                13
+misses by kind:
+  phantom change (was a no-op, model changed something)   13
+
+first 5 misses in full:
+  [single] ep1769 action='move south'
+    state: agent=(0,4); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+    truth: agent=(0,4); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+    pred : agent=(0,3); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+  [single] ep1769 action='move south'
+    state: agent=(0,4); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+    truth: agent=(0,4); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+    pred : agent=(0,3); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+  [single] ep1769 action='move south'
+    state: agent=(0,4); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+    truth: agent=(0,4); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+    pred : agent=(0,3); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+  [single] ep1769 action='move south'
+    state: agent=(0,4); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+    truth: agent=(0,4); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+    pred : agent=(0,3); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+  [single] ep1769 action='move south'
+    state: agent=(0,4); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+    truth: agent=(0,4); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]
+    pred : agent=(0,3); key=(0,1); door=(2,2) locked; has_key=false; walls=[(0,2),(0,3)]

@@ -1,0 +1,15 @@
+# --- secrets & machine state: never commit ---
+.env
+podenv/id_ed25519
+podenv/id_ed25519.pub
+podenv/.pod_state.json
+
+# --- python noise ---
+__pycache__/
+*.pyc
+
+# --- personal learning reports (not part of the evidence chain) ---
+report/
+
+# --- intermediate training checkpoints (~75 MB); the final adapter IS committed ---
+checkpoints/qwen05b-lora/checkpoint-*/

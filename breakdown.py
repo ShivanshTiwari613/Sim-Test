@@ -1,16 +1,10 @@
-"""Per-rule breakdown of the test results, from committed files only.
+"""Per-rule accuracy from committed files only — no model call needed.
 
-Slices every test transition into the rule it exercises (move that works,
-move blocked by an edge / a wall / the locked door, pick-up, unlock), then
-joins the autopsy's miss list to report exact-match accuracy per rule next
-to how often that rule appears in training. No model call is needed: the
-autopsy already graded all 3,000 single-step transitions, so accuracy per
-rule is 1 - (misses in that rule / test rows in that rule).
+Buckets every test transition by the rule it exercises, then joins the
+autopsy's miss list: accuracy = 1 - misses/rows per rule.
 
-Outputs (all deterministic):
-  breakdown.md            the per-rule table
-  breakdown.png           training exposure vs test accuracy, one dot per rule
-  examples/exhibits.jsonl one showcase transition per rule + one real miss
+Outputs: breakdown.md (table), breakdown.png (chart),
+examples/exhibits.jsonl (one showcase per rule + one real miss).
 
 Run: python breakdown.py   (stdlib; matplotlib only for the chart)
 """
@@ -47,11 +41,7 @@ def parse_state(s):
 
 
 def categorize(state_str, action):
-    """Name the single rule this (state, action) exercises.
-
-    Mirrors env.step's check order (edge, then wall, then locked door) so the
-    category is exactly the branch the environment took.
-    """
+    """Name the rule this (state, action) exercises; mirrors env.step's check order."""
     s = parse_state(state_str)
     if action in _DELTAS:
         ddx, ddy = _DELTAS[action]
@@ -72,8 +62,6 @@ def categorize(state_str, action):
     raise ValueError(f"unknown action: {action}")
 
 
-# Wall-blocks split out by direction in the README's autopsy discussion;
-# keep the table at rule granularity but note direction for the miss rows.
 ORDER = [
     "move: succeeds",
     "move: blocked by edge",
@@ -147,9 +135,8 @@ def main():
         f.write(table)
     print(table)
 
-    # --- exhibits: first test row of each rule, plus one real miss, with the
-    # model's actual output. The autopsy graded every test row, so any row not
-    # in the miss list was predicted exactly right (prediction == truth). ---
+    # --- exhibits: first test row per rule + one real miss. Any row not in
+    # the miss list was predicted exactly right, so prediction == truth. ---
     exhibits = []
     for cat in ORDER:
         r = min(test_rows[cat], key=lambda r: (r["episode"], r["step"]))

@@ -18,6 +18,10 @@ world model, not to be a production component.
 | Training wall-clock (RTX 4090, batch 64) | 10 min |
 | Total pod cost for the run | ≈ $0.15 |
 
+The full measured numbers — per-rule accuracy, miss forensics, dataset
+composition, adapter accounting, training throughput — live in
+[`METRICS.md`](METRICS.md).
+
 The headline finding is the **flat drift curve** (`eval_drift.png`): 98% at
 step 1 → 96% at step 10. Errors don't compound — a correctly predicted state is
 a fully self-contained input for the next step, so the 48 clean episodes stay

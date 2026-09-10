@@ -14,3 +14,13 @@ report/
 
 # --- intermediate training checkpoints (~75 MB); the final adapter IS committed ---
 checkpoints/qwen05b-lora/checkpoint-*/
+
+# --- blog drafts & publishing material (local only) ---
+substack/
+
+# --- local session context for AI assistants ---
+CLAUDE.md
+AGENTS.md
+
+# NOTE: trace/ (CPU trace tools + dumps) is deliberately NOT ignored —
+# the machine post promises it lands in this repo; commit is pending.
